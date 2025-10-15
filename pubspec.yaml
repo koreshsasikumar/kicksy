@@ -52,7 +52,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/images/splash.png
+  image: assets/shoe.png
   android: true
   ios: true
 
@@ -120,7 +120,7 @@ flutter:
     - assets/images/82.jpeg
     - assets/images/83.jpeg
     - assets/images/84.jpg
-    - assets/images/shop.jpeg
+    - assets/shoe.png
  
 
   # An image asset can refer to one or more resolution-specific "variants", see

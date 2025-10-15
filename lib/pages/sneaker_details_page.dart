@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kicksy/data/shoe.dart';
 
-class Sneakers extends ConsumerStatefulWidget {
+class SneakerDetailsPage extends ConsumerStatefulWidget {
   final Shoe shoe;
-  const Sneakers({super.key, required this.shoe});
+  const SneakerDetailsPage({super.key, required this.shoe});
 
   @override
-  ConsumerState<Sneakers> createState() => _SneakersState();
+  ConsumerState<SneakerDetailsPage> createState() => _SneakersState();
 }
 
-class _SneakersState extends ConsumerState<Sneakers> {
+class _SneakersState extends ConsumerState<SneakerDetailsPage> {
   int selectedImage = 0;
   @override
   Widget build(BuildContext context) {

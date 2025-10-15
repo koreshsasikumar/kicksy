@@ -28,7 +28,7 @@ class _AllItemWidgetState extends State<AllItemWidget> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Sneakers(shoe: shoes[index]),
+                builder: (context) => SneakerDetailsPage(shoe: shoes[index]),
               ),
             );
           },

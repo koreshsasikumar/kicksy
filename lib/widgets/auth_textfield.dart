@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+
+class AuthTextField extends StatelessWidget {
+  final Function(String) onChanged;
+  final String? Function(String?) validator;
+  final String hintText;
+  final IconData? prefixIcon;
+  final bool obscureText;
+  final Widget? suffixIcon;
+  final TextInputType keyBoardType;
+
+  const AuthTextField({
+    super.key,
+    required this.onChanged,
+    required this.validator,
+    required this.hintText,
+    this.prefixIcon,
+    this.obscureText = false,
+    this.suffixIcon,
+    this.keyBoardType = TextInputType.name,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      keyboardType: keyBoardType,
+      onChanged: onChanged,
+      validator: validator,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(color: Colors.grey[400]),
+        prefixIcon: prefixIcon != null
+            ? Icon(prefixIcon, color: Color(0xFF17387E))
+            : null,
+        suffixIcon: suffixIcon,
+        filled: true,
+        fillColor: Colors.grey[100],
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 20,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Color(0xFF17387E), width: 1.5),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF17387E), width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
+        ),
+      ),
+    );
+  }
+}

@@ -1,4 +1,4 @@
-package com.example.kicksy
+package com.kicksy
 
 import io.flutter.embedding.android.FlutterActivity
 
