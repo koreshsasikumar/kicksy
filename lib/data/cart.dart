@@ -1,7 +1,8 @@
 import 'package:kicksy/data/shoe.dart';
 
 class Cart {
-  String id;
+  String cartId;
+  String? userId;
   Shoe shoe;
   String image;
   String name;
@@ -9,7 +10,8 @@ class Cart {
   String size;
 
   Cart({
-    this.id = '',
+    this.userId = '',
+    this.cartId = '',
     required this.image,
     required this.name,
     required this.price,
@@ -17,7 +19,8 @@ class Cart {
     required this.size,
   });
   Map<String, dynamic> toJson() => {
-    'id': id,
+    'userId': userId,
+    'cartId': cartId,
     'image': image,
     'name': name,
     'price': price,
@@ -25,7 +28,8 @@ class Cart {
   };
 
   factory Cart.fromjson(Map<String, dynamic> json) => Cart(
-    id: json['id'] ?? '',
+    userId: json['userId'] ?? '',
+    cartId: json['cartId'] ?? '',
     image: json['image'] ?? '',
     name: json['name'] ?? '',
     price: json['price'] ?? '',

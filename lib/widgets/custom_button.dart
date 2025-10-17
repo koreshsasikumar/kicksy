@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kicksy/appTheme/app_color.dart';
 
 class CustomButton extends StatelessWidget {
   final void Function()? onPressed;
@@ -17,7 +18,7 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(shape:RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(16)),
-        backgroundColor: const Color(0xFF17387E),
+        backgroundColor:  AppColor.primaryColor,
         minimumSize: const Size(double.infinity, 45),
       ),
       child: isLoading

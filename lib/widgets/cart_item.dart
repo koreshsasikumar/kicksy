@@ -6,7 +6,7 @@ import 'package:kicksy/extension/extension.dart';
 import 'package:kicksy/pages/cart/provider/cart_provider.dart';
 
 class CartItem extends ConsumerStatefulWidget {
-  final String id;
+  final String cartId;
   final String image;
   final String name;
   final String price;
@@ -20,7 +20,7 @@ class CartItem extends ConsumerStatefulWidget {
     required this.price,
     required this.index,
     required this.size,
-    required this.id,
+    required this.cartId,
   });
 
   @override
@@ -73,14 +73,12 @@ class _CartItemState extends ConsumerState<CartItem> {
                 ),
                 5.height,
 
-                // Size
                 Text(
                   "Size: ${widget.size}",
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 5.height,
 
-                // Price
                 Text(
                   widget.price,
                   style: const TextStyle(
@@ -93,17 +91,14 @@ class _CartItemState extends ConsumerState<CartItem> {
             ),
           ),
 
-          // Delete + Quantity Controls
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Delete Button
               IconButton(
-                onPressed: () => provider.removeItem(widget.id),
+                onPressed: () => provider.removeItem(widget.cartId),
                 icon: const Icon(Icons.delete, color: Colors.redAccent),
               ),
 
-              // Quantity Controls
               Container(
                 height: 35,
                 width: 100,
@@ -114,7 +109,6 @@ class _CartItemState extends ConsumerState<CartItem> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    // Minus
                     Container(
                       height: 30,
                       width: 30,
@@ -137,7 +131,6 @@ class _CartItemState extends ConsumerState<CartItem> {
                       ),
                     ),
 
-                    // Quantity
                     Text(
                       "$quantity",
                       style: const TextStyle(
@@ -146,7 +139,6 @@ class _CartItemState extends ConsumerState<CartItem> {
                       ),
                     ),
 
-                    // Plus
                     Container(
                       height: 30,
                       width: 30,

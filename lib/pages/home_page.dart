@@ -6,20 +6,35 @@ import 'package:kicksy/data/brand.dart';
 import 'package:kicksy/extension/extension.dart';
 import 'package:kicksy/pages/cart/cart_page.dart';
 import 'package:kicksy/pages/cart/provider/cart_provider.dart';
+import 'package:kicksy/pages/cart/shoes_carousel.dart';
 import 'package:kicksy/widgets/all_item.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
+  @override
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(cartProvider.notifier).fetchCartItems();
+    });
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final provider = ref.watch(cartProvider);
+    final provider = ref.watch(cartProvider.notifier);
+    final cartItems = ref.watch(cartProvider);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         leading: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(16.0),
           child: Container(
             height: 40,
             width: 35,
@@ -33,7 +48,6 @@ class HomePage extends ConsumerWidget {
         title: Text(
           'Home',
           style: theme.textTheme.titleLarge?.copyWith(
-            color: AppColor.backgroundDark,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -52,7 +66,7 @@ class HomePage extends ConsumerWidget {
                 child: Badge.count(
                   backgroundColor: const Color.fromARGB(255, 241, 86, 74),
                   textStyle: const TextStyle(fontSize: 9.9),
-                  count: provider.length,
+                  count: provider.isLoading ? 0 : cartItems.length,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -100,11 +114,7 @@ class HomePage extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.location_on_rounded,
-                      size: 18,
-                      color: Color.fromARGB(255, 40, 148, 43),
-                    ),
+                    const Icon(Icons.location_on_rounded, size: 18),
                     5.height,
                     const Text(
                       'Ship to',
@@ -125,90 +135,8 @@ class HomePage extends ConsumerWidget {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 100,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: brands.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(brands[index].image),
-                          ),
-                          shape: BoxShape.circle,
-                          color: const Color.fromARGB(255, 241, 238, 238),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                width: 350,
-                height: 120,
-                child: Card(
-                  color: Colors.black,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        'assets/images/black_shoe.jpg',
-                        alignment: const Alignment(-0.80, -0.80),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          children: [
-                            const Text(
-                              'Year-End Sale',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const Text(
-                              'Up To 90%',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 116, 111, 111),
-                              ),
-                            ),
-                            8.height,
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColor.primaryColor,
-                                ),
-                                child: const Text(
-                                  'Shop Now',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              40.height,
+              const ShoesCarousel(),
+
               const AllItem(),
             ],
           ),

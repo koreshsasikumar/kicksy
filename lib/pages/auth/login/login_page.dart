@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kicksy/appTheme/app_color.dart';
-import 'package:kicksy/appTheme/app_theme.dart';
 import 'package:kicksy/extension/extension.dart';
 import 'package:kicksy/pages/auth/register/provider/auth_provider.dart';
 import 'package:kicksy/widgets/auth_textfield.dart';
@@ -20,6 +19,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final registerState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
 
@@ -31,12 +31,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Sign In',
-                style: TextStyle(
+                style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 28,
-                  color: Colors.white,
                 ),
               ),
               24.height,
@@ -58,7 +56,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   onTap: () => authNotifier.toggleObscurePassword(),
 
                   child: Icon(
-                    color: Color(0xFF17387E),
                     registerState.obscurePassword
                         ? Icons.visibility_off
                         : Icons.remove_red_eye,
@@ -67,16 +64,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               Row(
                 children: [
-                  Spacer(),
+                  const Spacer(),
                   TextButton(
                     onPressed: () {
                       context.go('/forgot_password');
                     },
 
-                    child: Text(
+                    child: const Text(
                       'Forgot Password',
                       style: TextStyle(
-                        color: AppColor.backgroundLight,
+                        color: AppColor.primaryColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -93,7 +90,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     await authNotifier.loginUser(context);
                   }
                 },
-                child: Text(
+                child: const Text(
                   'Login',
                   style: TextStyle(
                     color: Colors.white,
@@ -117,7 +114,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     child: const Text(
                       'Sign Up',
                       style: TextStyle(
-                        color: AppColor.backgroundLight,
+                        color: AppColor.primaryColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

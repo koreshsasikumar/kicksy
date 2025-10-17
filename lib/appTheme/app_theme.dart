@@ -16,7 +16,7 @@ class AppTheme {
     ),
     drawerTheme: const DrawerThemeData(backgroundColor: AppColor.primaryColor),
     cardTheme: const CardThemeData(color: AppColor.primaryColor),
-    iconTheme: const IconThemeData(color: AppColor.iconColor),
+    iconTheme: const IconThemeData(color: AppColor.primaryColor),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColor.buttonColor,
     ),

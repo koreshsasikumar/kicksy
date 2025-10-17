@@ -180,7 +180,7 @@ class _SneakersState extends ConsumerState<SneakerDetailsPage> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: isSelected
-                                ? AppColor.backgroundLight
+                                ? AppColor.secondaryColor
                                 : AppColor.primaryColor,
                           ),
                         ),

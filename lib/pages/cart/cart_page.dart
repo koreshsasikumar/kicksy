@@ -26,6 +26,8 @@ class _CartPageState extends ConsumerState<CartPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cartItems = ref.watch(cartProvider);
+    final cartNotifier = ref.watch(cartProvider.notifier);
+
     final total = ref.watch(cartProvider.notifier).totalPrice;
     final registerState = ref.watch(authProvider);
     return Scaffold(
@@ -61,7 +63,9 @@ class _CartPageState extends ConsumerState<CartPage> {
           ),
         ],
       ),
-      body: cartItems.isEmpty
+      body: cartNotifier.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : cartItems.isEmpty
           ? const Center(
               child: Text(
                 "Your cart is empty",
@@ -122,7 +126,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                     itemBuilder: (context, index) {
                       final item = cartItems[index];
                       return CartItem(
-                        id: item.id,
+                        cartId: item.cartId,
                         image: item.image,
                         name: item.name,
                         index: index,

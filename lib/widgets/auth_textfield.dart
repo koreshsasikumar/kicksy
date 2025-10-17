@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kicksy/appTheme/app_color.dart';
 
 class AuthTextField extends StatelessWidget {
   final Function(String) onChanged;
@@ -30,9 +31,7 @@ class AuthTextField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(color: Colors.grey[400]),
-        prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: Color(0xFF17387E))
-            : null,
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: Colors.grey[100],
@@ -42,11 +41,14 @@ class AuthTextField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Color(0xFF17387E), width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColor.textSecondary,
+            width: 1.5,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF17387E), width: 2),
+          borderSide: const BorderSide(color: AppColor.primaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

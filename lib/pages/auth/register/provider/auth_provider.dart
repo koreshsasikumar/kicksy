@@ -317,11 +317,12 @@ class AuthProvider extends StateNotifier<RegisterState> {
 
   Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
+    state = RegisterState();
+
     if (context.mounted) {
       context.go('/login');
 
       state = state.copyWith(errorMessage: null);
-      state = RegisterState();
     }
   }
 

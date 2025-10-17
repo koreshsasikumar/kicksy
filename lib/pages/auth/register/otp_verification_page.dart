@@ -22,7 +22,7 @@ class OtpVerificationPage extends ConsumerWidget {
             keyboardType: TextInputType.number,
             decoration:  const InputDecoration(
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColor.backgroundLight, width: 2),
+                borderSide: BorderSide(color: AppColor.secondaryColor, width: 2),
               ),
               hintText: 'Enter your phone number',
             ),

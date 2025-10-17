@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  carousel_slider: ^5.1.1
   cupertino_icons: ^1.0.2
   flutter_riverpod: ^3.0.3
   firebase_core: ^4.1.0
@@ -60,6 +61,7 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: assets/shoe.png
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -122,6 +124,12 @@ flutter:
     - assets/images/84.jpg
     - assets/shoe.png
     - assets/logout.png
+    - assets/carousel/banner-for-sneaker.png
+    - assets/carousel/black-friday.png
+    - assets/carousel/creative-banner.png
+    - assets/carousel/sneaker-brand.png
+    - assets/carousel/creative2.png
+
  
 
   # An image asset can refer to one or more resolution-specific "variants", see
