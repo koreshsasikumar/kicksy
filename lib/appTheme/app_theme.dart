@@ -6,12 +6,14 @@ class AppTheme {
     brightness: Brightness.light,
     primaryColor: AppColor.primaryColor,
     scaffoldBackgroundColor: AppColor.backgroundLight,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: AppColor.primaryColor,
-      foregroundColor: Colors.white,
-      elevation: 0,
+    // appBarTheme: const AppBarTheme(
+    //   backgroundColor: AppColor.primaryColor,
+    //   foregroundColor: Colors.white,
+    //   elevation: 0,
+    // ),
+    dialogTheme: const DialogThemeData(
+      backgroundColor: AppColor.backgroundLight,
     ),
-    dialogTheme: const DialogThemeData(backgroundColor: AppColor.backgroundLight),
     drawerTheme: const DrawerThemeData(backgroundColor: AppColor.primaryColor),
     cardTheme: const CardThemeData(color: AppColor.primaryColor),
     iconTheme: const IconThemeData(color: AppColor.iconColor),

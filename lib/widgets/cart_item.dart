@@ -1,35 +1,53 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kicksy/appTheme/app_color.dart';
+import 'package:kicksy/extension/extension.dart';
+import 'package:kicksy/pages/cart/provider/cart_provider.dart';
 
-class CartItem extends StatefulWidget {
+class CartItem extends ConsumerStatefulWidget {
+  final String id;
   final String image;
   final String name;
   final String price;
+  final int index;
+  final String size;
 
   const CartItem({
     super.key,
     required this.image,
     required this.name,
     required this.price,
+    required this.index,
+    required this.size,
+    required this.id,
   });
 
   @override
-  State<CartItem> createState() => _CartItemState();
+  ConsumerState<CartItem> createState() => _CartItemState();
 }
 
-int number = 0;
+class _CartItemState extends ConsumerState<CartItem> {
+  int quantity = 1;
 
-class _CartItemState extends State<CartItem> {
   @override
   Widget build(BuildContext context) {
+    final provider = ref.watch(cartProvider.notifier);
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+        ],
+      ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(15),
             child: Image.asset(
               widget.image,
               height: 80,
@@ -37,93 +55,119 @@ class _CartItemState extends State<CartItem> {
               fit: BoxFit.cover,
             ),
           ),
-          Column(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 50),
-                child: Text(
+
+          12.width,
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
                   widget.name,
                   style: const TextStyle(
-                    color: Color.fromARGB(255, 141, 135, 135),
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                widget.price,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            height: 35,
-            width: 100,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 241, 238, 238),
-              borderRadius: BorderRadius.circular(19),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        // shoes.map((e) => null)
-                        if (number > 0) {
-                          number--;
-                        }
-                      });
-                    },
-                    icon: const Icon(
-                      CupertinoIcons.minus,
-                      color: Color.fromARGB(255, 72, 201, 76),
-                      size: 12,
-                    ),
-                  ),
-                ),
+                5.height,
+
+                // Size
                 Text(
-                  "$number",
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  "Size: ${widget.size}",
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        number++;
-                      });
-                    },
-                    icon: const Icon(
-                      CupertinoIcons.plus,
-                      color: Colors.white,
-                      size: 12,
-                    ),
+                5.height,
+
+                // Price
+                Text(
+                  widget.price,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.backgroundDark,
                   ),
                 ),
               ],
             ),
+          ),
+
+          // Delete + Quantity Controls
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Delete Button
+              IconButton(
+                onPressed: () => provider.removeItem(widget.id),
+                icon: const Icon(Icons.delete, color: Colors.redAccent),
+              ),
+
+              // Quantity Controls
+              Container(
+                height: 35,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 241, 238, 238),
+                  borderRadius: BorderRadius.circular(19),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // Minus
+                    Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          if (quantity > 1) {
+                            setState(() => quantity--);
+                          }
+                        },
+                        icon: const Icon(
+                          CupertinoIcons.minus,
+                          color: Colors.green,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+
+                    // Quantity
+                    Text(
+                      "$quantity",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    // Plus
+                    Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () => setState(() => quantity++),
+                        icon: const Icon(
+                          CupertinoIcons.plus,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,14 +15,10 @@ class SignOutDialog extends ConsumerWidget {
     return AlertDialog(
       title: Column(
         children: [
-          Image(
-            image: AssetImage('assets/images/logout.png'),
-            width: 80,
-            height: 80,
-          ),
+          Image(image: AssetImage('assets/logout.png'), width: 80, height: 80),
           20.height,
           Text(
-            "Logging out will pause your progress...  Are you sure?",
+            "Are you sure?",
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),

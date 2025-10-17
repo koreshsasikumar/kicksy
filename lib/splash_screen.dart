@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void timer() {
-    Timer(const Duration(seconds: 6), () {
+    Timer(const Duration(seconds: 3), () {
       context.go(user != null ? '/home' : '/login');
     });
   }
@@ -27,7 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Image.asset('assets/shoe.png')),
+      body: Center(
+        child: Image.asset('assets/shoe.png', width: 200, height: 200),
+      ),
     );
   }
 }

@@ -7,8 +7,7 @@ import 'package:kicksy/route/go_route.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(    options: DefaultFirebaseOptions.currentPlatform,
-);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const ProviderScope(child: Kicksy()));
 }
@@ -20,7 +19,7 @@ class Kicksy extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Do Daily',
+      title: 'Kicky',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
