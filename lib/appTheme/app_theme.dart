@@ -5,9 +5,10 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: AppColor.primaryColor,
-    scaffoldBackgroundColor: AppColor.backgroundLight,
+    scaffoldBackgroundColor: Colors.yellow[50],
+
     // appBarTheme: const AppBarTheme(
-    //   backgroundColor: AppColor.primaryColor,
+    //   backgroundColor: Colors.yellow,
     //   foregroundColor: Colors.white,
     //   elevation: 0,
     // ),

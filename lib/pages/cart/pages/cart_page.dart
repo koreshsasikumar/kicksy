@@ -4,7 +4,7 @@ import 'package:kicksy/appTheme/app_color.dart';
 import 'package:kicksy/extension/extension.dart';
 import 'package:kicksy/pages/auth/register/provider/auth_provider.dart';
 import 'package:kicksy/pages/cart/provider/cart_provider.dart';
-import 'package:kicksy/widgets/cart_item.dart';
+import 'package:kicksy/pages/cart/pages/cart_item.dart';
 
 class CartPage extends ConsumerStatefulWidget {
   const CartPage({super.key});
@@ -31,7 +31,6 @@ class _CartPageState extends ConsumerState<CartPage> {
     final total = ref.watch(cartProvider.notifier).totalPrice;
     final registerState = ref.watch(authProvider);
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(8.0),

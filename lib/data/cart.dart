@@ -36,6 +36,7 @@ class Cart {
     shoe:
         json['shoe'] ??
         Shoe(
+          id: json['shoeId'] ?? '',
           name: json['name'] ?? '',
           image: json['image'],
           cost: int.tryParse(json['price'] ?? '0') ?? 0,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kicksy/appTheme/app_color.dart';
 import 'package:kicksy/data/cart.dart';
 import 'package:kicksy/data/shoe.dart';
@@ -22,7 +23,7 @@ class _SneakersState extends ConsumerState<SneakerDetailsPage> {
     final selectedSize = ref.watch(selectedSizeProvider);
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
+        leading:  BackButton(onPressed: () => context.go('/home')),
         title: const Text("Sneakers details"),
         centerTitle: true,
         actions: [

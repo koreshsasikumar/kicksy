@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kicksy/data/shoe.dart';
-import 'package:kicksy/pages/sneaker_details_page.dart';
+import 'package:kicksy/pages/favourite/provider/favourite_provider.dart';
 
-class AllItem extends StatefulWidget {
+class AllItem extends ConsumerStatefulWidget {
   const AllItem({super.key});
 
   @override
-  State<AllItem> createState() => _AllItemWidgetState();
+  ConsumerState<AllItem> createState() => _AllItemWidgetState();
 }
 
-class _AllItemWidgetState extends State<AllItem> {
-  final List<bool> likedList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    likedList.addAll(List.generate(shoes.length, (_) => false));
-  }
-
+class _AllItemWidgetState extends ConsumerState<AllItem> {
   @override
   Widget build(BuildContext context) {
+    final favourite = ref.watch(favoriteProvider.notifier);
+    ref.watch(favoriteProvider);
+
     return GridView.builder(
       scrollDirection: Axis.vertical,
       physics: const NeverScrollableScrollPhysics(),
@@ -33,7 +30,6 @@ class _AllItemWidgetState extends State<AllItem> {
       itemCount: shoes.length,
       itemBuilder: (context, index) {
         final shoe = shoes[index];
-        final isLiked = likedList[index];
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,12 +39,7 @@ class _AllItemWidgetState extends State<AllItem> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SneakerDetailsPage(shoe: shoe),
-                        ),
-                      );
+                      context.go('/sneaker_detail');
                     },
                     child: Container(
                       margin: const EdgeInsets.all(5),
@@ -66,13 +57,11 @@ class _AllItemWidgetState extends State<AllItem> {
                     top: 15,
                     right: 20,
                     child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          likedList[index] = !likedList[index];
-                        });
+                      onTap: () async {
+                        await favourite.addFavorites(shoe);
                       },
                       child: AnimatedScale(
-                         scale:  1.0,
+                        scale: 1.0,
                         duration: const Duration(milliseconds: 200),
                         curve: Curves.bounceInOut,
                         child: AnimatedSwitcher(
@@ -80,16 +69,20 @@ class _AllItemWidgetState extends State<AllItem> {
                           transitionBuilder: (child, anim) =>
                               ScaleTransition(scale: anim, child: child),
                           child: Container(
-                            key: ValueKey<bool>(isLiked),
+                            key: ValueKey<bool>(favourite.isFavorite(shoe)),
                             height: 25,
                             width: 25,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white,
                             ),
                             child: Icon(
-                              isLiked ? Icons.favorite : Icons.favorite_border,
-                              color: isLiked ? Colors.red : Colors.grey,
+                              favourite.isFavorite(shoe)
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: favourite.isFavorite(shoe)
+                                  ? Colors.red
+                                  : Colors.grey,
                               size: 19,
                             ),
                           ),
