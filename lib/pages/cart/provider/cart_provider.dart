@@ -8,8 +8,6 @@ final cartProvider = StateNotifierProvider<CartProvider, List<Cart>>((ref) {
   return CartProvider();
 });
 
-final selectedSizeProvider = StateProvider<String?>((ref) => null);
-
 class CartProvider extends StateNotifier<List<Cart>> {
   CartProvider() : super([]) {
     fetchCartItems();

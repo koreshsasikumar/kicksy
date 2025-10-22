@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kicksy/appTheme/app_color.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kicksy/extension/extension.dart';
-import 'package:kicksy/pages/auth/register/provider/auth_provider.dart';
 import 'package:kicksy/pages/cart/provider/cart_provider.dart';
 import 'package:kicksy/pages/cart/pages/cart_item.dart';
+import 'package:kicksy/pages/location/provider/location_provider.dart';
 
 class CartPage extends ConsumerStatefulWidget {
   const CartPage({super.key});
@@ -19,17 +19,18 @@ class _CartPageState extends ConsumerState<CartPage> {
     super.initState();
     Future.microtask(() {
       ref.read(cartProvider.notifier).fetchCartItems();
+      ref.read(locationProvider.notifier).fetchCurrentLocation();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final cartItems = ref.watch(cartProvider);
     final cartNotifier = ref.watch(cartProvider.notifier);
+    final location = ref.watch(locationProvider);
+    final locationNotifier = ref.watch(locationProvider.notifier);
 
     final total = ref.watch(cartProvider.notifier).totalPrice;
-    final registerState = ref.watch(authProvider);
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -41,7 +42,7 @@ class _CartPageState extends ConsumerState<CartPage> {
             ),
             height: 30,
             width: 25,
-            child: const BackButton(),
+            child: BackButton(onPressed: () => context.go('/home')),
           ),
         ),
         title: const Text('Cart'),
@@ -78,13 +79,6 @@ class _CartPageState extends ConsumerState<CartPage> {
                     padding: const EdgeInsets.only(left: 20),
                     child: Row(
                       children: [
-                        const CircleAvatar(
-                          backgroundImage: AssetImage(
-                            'assets/images/shop.jpeg',
-                          ),
-                          minRadius: 9,
-                        ),
-                        5.height,
                         const Text(
                           'Ship to:',
                           style: TextStyle(
@@ -93,26 +87,34 @@ class _CartPageState extends ConsumerState<CartPage> {
                             color: Color.fromARGB(255, 141, 135, 135),
                           ),
                         ),
-                        5.width,
-                        Text(
-                          registerState.name,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.backgroundDark,
+                        TextButton(
+                          style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on_rounded,
+                                color: Colors.redAccent,
+                                size: 18,
+                              ),
+                              locationNotifier.isLoading
+                                  ? const SizedBox(
+                                      height: 12,
+                                      width: 12,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : Text(
+                                      location,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromARGB(255, 76, 170, 78),
+                                      ),
+                                    ),
+                            ],
                           ),
-                        ),
-                        const Spacer(),
-                        const Text(
-                          'Tegalsari,Surabaya',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 76, 170, 78),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.arrow_drop_down),
+                          onPressed: () => context.go('/location_page'),
                         ),
                       ],
                     ),

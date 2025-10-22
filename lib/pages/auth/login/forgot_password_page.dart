@@ -17,7 +17,7 @@ class ForgotPasswordPage extends ConsumerWidget {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: 16.padAll,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

@@ -39,7 +39,9 @@ class _AllItemWidgetState extends ConsumerState<AllItem> {
                 children: [
                   InkWell(
                     onTap: () {
-                      context.go('/sneaker_detail');
+                      // ref.read(selectedShoeProvider.notifier).state =
+                      //     shoes[index];
+                      context.go('/sneaker_detail', extra: shoes[index]);
                     },
                     child: Container(
                       margin: const EdgeInsets.all(5),
@@ -47,7 +49,7 @@ class _AllItemWidgetState extends ConsumerState<AllItem> {
                         color: const Color(0xfff0f0f0),
                         borderRadius: BorderRadius.circular(20.0),
                         image: DecorationImage(
-                          image: AssetImage(shoe.image),
+                          image: AssetImage(shoes[index].image),
                           fit: BoxFit.fill,
                         ),
                       ),

@@ -6,6 +6,7 @@ import 'package:kicksy/data/cart.dart';
 import 'package:kicksy/data/shoe.dart';
 import 'package:kicksy/extension/extension.dart';
 import 'package:kicksy/pages/cart/provider/cart_provider.dart';
+import 'package:kicksy/pages/sneaker_detail/provider/sneaker_detail_provider.dart';
 
 class SneakerDetailsPage extends ConsumerStatefulWidget {
   final Shoe shoe;
@@ -16,14 +17,12 @@ class SneakerDetailsPage extends ConsumerStatefulWidget {
 }
 
 class _SneakersState extends ConsumerState<SneakerDetailsPage> {
-  int selectedImage = 0;
   @override
   Widget build(BuildContext context) {
-    final provider = ref.watch(cartProvider.notifier);
     final selectedSize = ref.watch(selectedSizeProvider);
     return Scaffold(
       appBar: AppBar(
-        leading:  BackButton(onPressed: () => context.go('/home')),
+        leading: BackButton(onPressed: () => context.go('/home')),
         title: const Text("Sneakers details"),
         centerTitle: true,
         actions: [
@@ -33,7 +32,7 @@ class _SneakersState extends ConsumerState<SneakerDetailsPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: 16.padAll,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -42,7 +41,9 @@ class _SneakersState extends ConsumerState<SneakerDetailsPage> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(widget.shoe.picture[selectedImage]),
+                    image: AssetImage(
+                      widget.shoe.picture[ref.watch(selectedImageProvider)],
+                    ),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -56,9 +57,7 @@ class _SneakersState extends ConsumerState<SneakerDetailsPage> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        setState(() {
-                          selectedImage = index;
-                        });
+                        ref.read(selectedImageProvider.notifier).state = index;
                       },
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 7),

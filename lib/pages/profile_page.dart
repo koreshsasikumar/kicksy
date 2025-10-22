@@ -29,7 +29,7 @@ class ProfilePage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(registerState.name, style: theme.textTheme.bodyMedium),
+            Text(registerState.email, style: theme.textTheme.bodyMedium),
             Expanded(
               child: ListView(
                 padding: 20.padLeft,

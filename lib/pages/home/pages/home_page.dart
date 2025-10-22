@@ -71,23 +71,37 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                 ],
               ),
-              child: Badge.count(
-                backgroundColor: const Color(0xffe53935),
-                textStyle: const TextStyle(fontSize: 9.5, color: Colors.white),
-                count: provider.isLoading ? 0 : cartItems.length,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const CartPage()),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.shopping_bag_outlined,
-                    color: Colors.black87,
-                  ),
-                ),
-              ),
+              child: cartItems.isEmpty
+                  ? IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const CartPage()),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.shopping_bag_outlined,
+                        color: Colors.black87,
+                      ),
+                    )
+                  : Badge.count(
+                      backgroundColor: const Color(0xffe53935),
+                      textStyle: const TextStyle(
+                        fontSize: 9.5,
+                        color: Colors.white,
+                      ),
+                      count: provider.isLoading ? 0 : cartItems.length,
+
+                      child: IconButton(
+                        onPressed: () {
+                        context.go('/cart_page');
+                        },
+                        icon: const Icon(
+                          Icons.shopping_bag_outlined,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
             ),
           ),
         ],
@@ -127,36 +141,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
               16.height,
 
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_rounded,
-                      color: Colors.redAccent,
-                      size: 18,
-                    ),
-                    SizedBox(width: 5),
-                    Text(
-                      'Ship to ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        color: Color.fromARGB(255, 141, 135, 135),
-                      ),
-                    ),
-                    Text(
-                      'JI. Malioboro, Blok Z, no 18',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              20.height,
 
               const Text(
                 "🔥 Featured Collections",
