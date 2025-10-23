@@ -19,16 +19,18 @@ class _CartPageState extends ConsumerState<CartPage> {
     super.initState();
     Future.microtask(() {
       ref.read(cartProvider.notifier).fetchCartItems();
+      ref.read(locationProvider.notifier).fetchSavedLocation();
       ref.read(locationProvider.notifier).fetchCurrentLocation();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final cartItems = ref.watch(cartProvider);
     final cartNotifier = ref.watch(cartProvider.notifier);
     final location = ref.watch(locationProvider);
-    final locationNotifier = ref.watch(locationProvider.notifier);
+    final locationNotifier = ref.read(locationProvider.notifier);
 
     final total = ref.watch(cartProvider.notifier).totalPrice;
     return Scaffold(
@@ -45,7 +47,13 @@ class _CartPageState extends ConsumerState<CartPage> {
             child: BackButton(onPressed: () => context.go('/home')),
           ),
         ),
-        title: const Text('Cart'),
+        title: Text(
+          'Cart',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
         centerTitle: true,
         actions: [
           Padding(
@@ -76,45 +84,50 @@ class _CartPageState extends ConsumerState<CartPage> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20),
+                    padding: 12.padAll,
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Ship to:',
-                          style: TextStyle(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 141, 135, 135),
                           ),
                         ),
-                        TextButton(
-                          style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on_rounded,
-                                color: Colors.redAccent,
-                                size: 18,
-                              ),
-                              locationNotifier.isLoading
-                                  ? const SizedBox(
-                                      height: 12,
-                                      width: 12,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : Text(
-                                      location,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 76, 170, 78),
-                                      ),
-                                    ),
-                            ],
-                          ),
+                        const Icon(
+                          Icons.location_on_rounded,
+                          color: Colors.redAccent,
+                          size: 20,
+                        ),
+                        8.width,
+                        Expanded(
+                          child: locationNotifier.isLoading
+                              ? const SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(
+                                  location.fullAddress.isEmpty
+                                      ? "No Address set yet"
+                                      : location.fullAddress,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 76, 170, 78),
+                                  ),
+                                  softWrap: true,
+                                ),
+                        ),
+                        IconButton(
                           onPressed: () => context.go('/location_page'),
+                          icon: const Icon(
+                            Icons.edit,
+                            size: 18,
+                            color: Colors.grey,
+                          ),
                         ),
                       ],
                     ),
@@ -173,7 +186,6 @@ class _CartPageState extends ConsumerState<CartPage> {
                             ),
                           ),
                         ),
-
                         const Divider(height: 15, color: Colors.grey),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
