@@ -19,8 +19,6 @@ class _CartPageState extends ConsumerState<CartPage> {
     super.initState();
     Future.microtask(() {
       ref.read(cartProvider.notifier).fetchCartItems();
-      ref.read(locationProvider.notifier).fetchSavedLocation();
-      ref.read(locationProvider.notifier).fetchCurrentLocation();
     });
   }
 
@@ -30,7 +28,6 @@ class _CartPageState extends ConsumerState<CartPage> {
     final cartItems = ref.watch(cartProvider);
     final cartNotifier = ref.watch(cartProvider.notifier);
     final location = ref.watch(locationProvider);
-    final locationNotifier = ref.read(locationProvider.notifier);
 
     final total = ref.watch(cartProvider.notifier).totalPrice;
     return Scaffold(
@@ -101,7 +98,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                         ),
                         8.width,
                         Expanded(
-                          child: locationNotifier.isLoading
+                          child: location.isLoading
                               ? const SizedBox(
                                   height: 16,
                                   width: 16,

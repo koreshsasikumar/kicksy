@@ -45,7 +45,7 @@ class LocationPage extends ConsumerWidget {
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
-                    ref.read(locationProvider.notifier).getCurrentLocation();
+                    ref.read(locationProvider.notifier).fetchCurrentLocation();
                   },
                   icon: const Icon(Icons.my_location),
                   label: const Text("Use My Current Location"),

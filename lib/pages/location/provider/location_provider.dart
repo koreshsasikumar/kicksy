@@ -6,11 +6,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kicksy/pages/location/address.dart';
 
-final locationProvider = StateNotifierProvider<LocationNotifier, Address>((
-  ref,
-) {
-  return LocationNotifier();
-});
+final locationProvider = StateNotifierProvider<LocationNotifier, Address>(
+  (ref) => LocationNotifier(),
+);
 
 class LocationNotifier extends StateNotifier<Address> {
   LocationNotifier() : super(Address()) {
@@ -26,74 +24,44 @@ class LocationNotifier extends StateNotifier<Address> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? get userId => FirebaseAuth.instance.currentUser?.uid;
 
-
   Future<void> fetchSavedLocation() async {
-    String? userId = this.userId;
-    if (userId == null) {
-      debugPrint('User is not logged in, cannot fetch location.');
-      return;
-    }
+    if (userId == null) return;
 
+    isLoading = true;
     try {
-      isLoading = true;
-      DocumentSnapshot doc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .get();
-
-      if (doc.exists && doc.data() != null) {
+      final doc = await _firestore.collection('users').doc(userId).get();
+      if (doc.exists) {
         final data = doc.data() as Map<String, dynamic>;
-
-        state = state.copyWith(
-          houseNo: data['houseNo'] as String? ?? 'unknown',
-          city: data['city'] as String? ?? 'unknown',
-          state: data['state'] as String? ?? 'unknown',
-          pinCode: data['pinCode'] as String? ?? 'unknown',
-          fullAddress: data['fullAddress'] as String? ?? 'No Address set yet',
+        state = Address(
+          houseNo: data['houseNo'] ?? '',
+          city: data['city'] ?? '',
+          state: data['state'] ?? '',
+          pinCode: data['pinCode'] ?? '',
+          fullAddress: data['fullAddress'] ?? 'No Address set yet',
         );
-
-       
-        houseNoController.text = state.houseNo != 'unknown'
-            ? state.houseNo
-            : '';
-        cityController.text = state.city != 'unknown' ? state.city : '';
-        stateController.text = state.state != 'unknown' ? state.state : '';
-        pinCodeController.text = state.pinCode != 'unknown'
-            ? state.pinCode
-            : '';
-
-        debugPrint('Location loaded from Firebase: ${state.fullAddress}');
+        _updateControllers();
       } else {
-        debugPrint('No saved location found for user.');
-        houseNoController.clear();
-        cityController.clear();
-        stateController.clear();
-        pinCodeController.clear();
+        _clearControllers();
       }
     } catch (e) {
-      debugPrint('Error fetching location from Firebase: $e');
-    } finally {
-      isLoading = false;
+      debugPrint("Error fetching location: $e");
     }
+    isLoading = false;
   }
 
   Future<void> submitLocation() async {
-    String? userId = this.userId;
-    if (userId == null) {
-      debugPrint('User is not logged in');
-      return;
-    }
+    if (userId == null) return;
+
+    state = state.copyWith(
+      houseNo: houseNoController.text,
+      city: cityController.text,
+      state: stateController.text,
+      pinCode: pinCodeController.text,
+      fullAddress:
+          "${houseNoController.text}, ${cityController.text}, ${stateController.text}, ${pinCodeController.text}",
+    );
 
     try {
-      state = state.copyWith(
-        houseNo: houseNoController.text,
-        city: cityController.text,
-        state: stateController.text,
-        pinCode: pinCodeController.text,
-      );
-      final submitLocation =
-          "${state.houseNo}, ${state.city}, ${state.state}, ${state.pinCode}";
-      state = state.copyWith(fullAddress: submitLocation);
       await _firestore.collection('users').doc(userId).set({
         'houseNo': state.houseNo,
         'city': state.city,
@@ -102,144 +70,70 @@ class LocationNotifier extends StateNotifier<Address> {
         'fullAddress': state.fullAddress,
         'timestamp': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
-
-      debugPrint('Location saved to Firebase successfully!');
     } catch (e) {
-      debugPrint('Error saving location to Firebase: $e');
-    }
-  }
-
-  Future<void> getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      await Geolocator.openLocationSettings();
-      state = state.copyWith(fullAddress: "Location services are disabled.");
-      return;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        state = state.copyWith(fullAddress: "Location permission denied.");
-        return;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      state = state.copyWith(
-        fullAddress: "Location permission permanently denied.",
-      );
-      return;
-    }
-    Position position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
-    );
-
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-      position.latitude,
-      position.longitude,
-    );
-
-    if (placemarks.isNotEmpty) {
-      Placemark place = placemarks.first;
-
-      state = state.copyWith(
-        houseNo: place.street ?? 'unknown',
-        city: place.locality ?? 'unknown',
-        state: place.administrativeArea ?? 'unknown',
-        pinCode: place.postalCode ?? 'unknown',
-        fullAddress:
-            "${place.locality ?? 'unknown'}, ${place.subAdministrativeArea ?? 'unknown'}, ${place.administrativeArea ?? 'unknown'}, ${place.country ?? 'unknown'}",
-      );
-    } else {
-      state = state.copyWith(fullAddress: "Unable to fetch address details.");
+      debugPrint("Error saving location: $e");
     }
   }
 
   Future<void> fetchCurrentLocation() async {
     isLoading = true;
     try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        state = state.copyWith(fullAddress: "Location services are disabled.");
-        return;
-      }
-
-      if (!serviceEnabled) {
-        await Geolocator.openLocationSettings();
-        state = state.copyWith(
-          fullAddress: "Please enable location services and try again.",
-        );
-        return;
-      }
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
 
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          state = state.copyWith(fullAddress: "Location permission denied.");
-          return;
-        }
       }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) return;
 
-      if (permission == LocationPermission.deniedForever) {
-        state = state.copyWith(
-          fullAddress: "Location permission permanently denied.",
-        );
-        return;
-      }
-
-      Position position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
-      );
-
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
+      final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      final placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
 
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
-        state = state.copyWith(
-          houseNo: place.street ?? 'unknown',
-          city: place.locality ?? 'unknown',
-          state: place.administrativeArea ?? 'unknown',
-          pinCode: place.postalCode ?? 'unknown',
+        state = Address(
+          houseNo: place.street ?? '',
+          city: place.locality ?? '',
+          state: place.administrativeArea ?? '',
+          pinCode: place.postalCode ?? '',
           fullAddress:
-              "${place.locality ?? 'unknown'}, ${place.subAdministrativeArea ?? 'unknown'}, ${place.administrativeArea ?? 'unknown'}, ${place.country ?? 'unknown'}",
+              "${place.street ?? ''}, ${place.locality ?? ''}, ${place.administrativeArea ?? ''}, ${place.postalCode ?? ''}",
         );
-      } else {
-        state = state.copyWith(fullAddress: "Unable to find address.");
+        _updateControllers();
       }
     } catch (e) {
-      state = state.copyWith(fullAddress: "Error: $e");
+      debugPrint("Error fetching location: $e");
     }
     isLoading = false;
   }
 
-  void setHouseNo(String houseNo) {
-    state = state.copyWith(houseNo: houseNo);
-    debugPrint("HouseNo set to: $houseNo");
+  void setHouseNo(String houseNo) =>
+      state = state.copyWith(houseNo: houseNo, fullAddress: '');
+
+  void setCity(String city) =>
+      state = state.copyWith(city: city, fullAddress: '');
+
+  void setState(String stateName) =>
+      state = state.copyWith(state: stateName, fullAddress: '');
+
+  void setPinCode(String pinCode) =>
+      state = state.copyWith(pinCode: pinCode, fullAddress: '');
+
+  void _updateControllers() {
+    houseNoController.text = state.houseNo;
+    cityController.text = state.city;
+    stateController.text = state.state;
+    pinCodeController.text = state.pinCode;
   }
 
-  void setCity(String city) {
-    state = state.copyWith(city: city);
-    debugPrint("City set to: $city");
-  }
-
-  void setState(String stateName) {
-    state = state.copyWith(state: stateName);
-    debugPrint("State set to: $stateName");
-  }
-
-  void setPinCode(String pinCode) {
-    state = state.copyWith(pinCode: pinCode);
-    debugPrint("PinCode set to: $pinCode");
+  void _clearControllers() {
+    houseNoController.clear();
+    cityController.clear();
+    stateController.clear();
+    pinCodeController.clear();
   }
 }
