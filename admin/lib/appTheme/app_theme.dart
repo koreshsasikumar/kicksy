@@ -5,9 +5,10 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: AppColor.primaryColor,
+
     navigationRailTheme: NavigationRailThemeData(
-      backgroundColor: AppColor.primaryColor),
-      
+      backgroundColor: AppColor.primaryColor,
+    ),
 
     // appBarTheme: const AppBarTheme(
     //   backgroundColor: Colors.yellow,
