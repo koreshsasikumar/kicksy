@@ -26,7 +26,7 @@ class CustomButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          elevation: 5,
+          elevation: 3,
         ),
         child: (isLoading ?? false)
             ? const CircularProgressIndicator(color: Colors.blue)

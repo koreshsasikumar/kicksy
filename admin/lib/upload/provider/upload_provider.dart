@@ -19,7 +19,6 @@ class UploadPageNotifier extends StateNotifier<UploadState> {
   final nameController = TextEditingController();
   final priceController = TextEditingController();
   final decsriptionController = TextEditingController();
-
   final firebaseStorage = FirebaseStorage.instance;
 
   Future<void> pickImage() async {

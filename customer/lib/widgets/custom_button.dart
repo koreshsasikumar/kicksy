@@ -17,8 +17,11 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
-      style: ElevatedButton.styleFrom(shape:RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(16)),
-        backgroundColor:  AppColor.primaryColor,
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(16),
+        ),
+        backgroundColor: AppColor.primaryColor,
         minimumSize: const Size(double.infinity, 45),
       ),
       child: isLoading

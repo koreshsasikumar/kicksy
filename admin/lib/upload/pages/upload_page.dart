@@ -1,3 +1,4 @@
+import 'package:admin/extension/extension.dart';
 import 'package:admin/upload/provider/upload_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _UploadPageState extends ConsumerState<UploadPage> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: 20.padAll,
         child: Form(
           key: _formKey,
           child: Column(
@@ -74,9 +75,7 @@ class _UploadPageState extends ConsumerState<UploadPage> {
                   );
                 }),
               ),
-
-              SizedBox(height: 20),
-
+              20.height,
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Product Name',
@@ -85,8 +84,7 @@ class _UploadPageState extends ConsumerState<UploadPage> {
                 controller: provider.nameController,
                 validator: (v) => v!.isEmpty ? 'Enter product name' : null,
               ),
-              const SizedBox(height: 15),
-
+              15.height,
               TextFormField(
                 controller: provider.priceController,
                 decoration: const InputDecoration(
@@ -97,8 +95,7 @@ class _UploadPageState extends ConsumerState<UploadPage> {
 
                 validator: (v) => v!.isEmpty ? 'Enter price' : null,
               ),
-              const SizedBox(height: 15),
-
+              15.height,
               TextFormField(
                 controller: provider.decsriptionController,
                 maxLines: 3,
@@ -107,8 +104,7 @@ class _UploadPageState extends ConsumerState<UploadPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 25),
-
+              25.height,
               Center(
                 child: uploadState.isLoading
                     ? const CircularProgressIndicator()
@@ -126,20 +122,15 @@ class _UploadPageState extends ConsumerState<UploadPage> {
                             if (success) {
                               provider.clearState();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                SnackBar(
                                   content: Text(
-                                    'Product uploaded successfully!',
+                                    success
+                                        ? 'Product uploaded successfully!'
+                                        : 'Failed to upload product. Try again.',
                                   ),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Failed to upload product. Try again.',
-                                  ),
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: success
+                                      ? Colors.green
+                                      : Colors.red,
                                 ),
                               );
                             }

@@ -3,6 +3,7 @@ import 'package:admin/home/provider/home_page_provider.dart';
 import 'package:admin/login/provider/login_provider.dart';
 import 'package:admin/orders/pages/orders_page.dart';
 import 'package:admin/products/pages/products_page.dart';
+import 'package:admin/staffs/pages/staff_page.dart';
 import 'package:admin/upload/pages/upload_page.dart';
 import 'package:admin/users/pages/users_page.dart';
 import 'package:admin/widgets/custom_button.dart';
@@ -20,6 +21,7 @@ class HomePage extends ConsumerWidget {
     'Users',
     'Orders',
     'Upload',
+    'Staffs',
   ];
 
   @override
@@ -124,6 +126,8 @@ class HomePage extends ConsumerWidget {
                               return OrdersPage();
                             case 4:
                               return UploadPage();
+                            case 5:
+                              return StaffsPage();
                             default:
                               return const Text('Welcome');
                           }
